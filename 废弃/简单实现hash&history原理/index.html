@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <title>React App</title>
+    <script>
+      const historyObj = window.history
+      const pushStateBak = historyObj.pushState
+      function render() {
+        const el = document.getElementById('history')
+        el.innerText = window.location.pathname
+      }
+
+      historyObj.pushState = function () {
+        pushStateBak.apply(historyObj, arguments)
+        render()
+      }
+      function push(path) {
+        historyObj.pushState({ name: 'lihh' }, null, path)
+      }
+
+      window.addEventListener('popstate', () => {
+        render()
+      })
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="router"></div>
+    <ul>
+      <li>
+        <a href="#a">/a</a>
+      </li>
+      <li>
+        <a href="#b">/b</a>
+      </li>
+      <li>
+        <a href="#c">/c</a>
+      </li>
+    </ul>
+    <hr />
+    <div id="history"></div>
+    <ul>
+      <li>
+        <a onclick='push("/a")'>/a</a>
+      </li>
+      <li>
+        <a onclick='push("/b")'>/b</a>
+      </li>
+      <li>
+        <a onclick='push("/c")'>/c</a>
+      </li>
+    </ul>
+  </body>
+</html>
