@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from 'react'
-import { createBrowserHistory, createHashHistory } from 'history'
+import { createBrowserHistory, createHashHistory } from '../history'
 export * from './react-router'
 import { Router } from './react-router'
 
