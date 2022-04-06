@@ -2,7 +2,7 @@
 import React from 'react'
 import { createBrowserHistory, createHashHistory } from '../history'
 export * from './react-router'
-import { Router } from './react-router'
+import { Router, useNavigate } from './react-router'
 
 /**
  * @author lihh
@@ -61,4 +61,12 @@ export function BrowserRouter({ children }) {
       navigator={history}
     />
   )
+}
+
+export function Link({ to, children }) {
+  const navigate = useNavigate()
+  const handleClick = () => {
+    navigate(to)
+  }
+  return <a onClick={handleClick}>{children}</a>
 }

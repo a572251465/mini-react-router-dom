@@ -77,11 +77,16 @@ export function Route(props) {}
  * @returns
  */
 function compilePath(path) {
-  let regexpSource = '^' + path
+  let paramNames = []
+  let regexpSource =
+    '^' +
+    path.replace(/:(\w+)/g, (_, key) => {
+      paramNames.push(key)
+      return '([^\\/]+)'
+    })
   regexpSource += '$'
-
-  const matcher = new RegExp(regexpSource)
-  return matcher
+  let matcher = new RegExp(regexpSource)
+  return [matcher, paramNames]
 }
 
 /**
@@ -91,9 +96,35 @@ function compilePath(path) {
  * @param {*} pathname 真实的路由地址
  */
 export function matchPath(path, pathname = '') {
-  const matcher = compilePath(path)
+  const [matcher, paramNames] = compilePath(path)
   const match = pathname.match(matcher)
 
   if (!match) return null
-  return match
+  const matchedPathname = match[0]
+  const values = match.slice(1)
+  const params = paramNames.reduce((memo, paramName, index) => {
+    memo[paramName] = values[index]
+    return memo
+  }, {})
+  return {
+    params,
+    pathname: matchedPathname,
+    path
+  }
+}
+
+/**
+ * @author lihh
+ * @description 获取路由使用的history
+ * @returns {(function(*): void)|*}
+ */
+export function useNavigate() {
+  const { navigator } = React.useContext(NavigationContext)
+  const navigate = React.useCallback(
+    (to) => {
+      navigator.push(to)
+    },
+    [navigator]
+  )
+  return navigate
 }
